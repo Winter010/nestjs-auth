@@ -1,4 +1,10 @@
-import { Controller, Get, Request, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Request,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common'
 
 import { Roles } from '@/auth/decorators/roles.decorator'
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard'
@@ -12,10 +18,16 @@ import { UsersService } from './users.service'
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get()
+  @Get('/current')
   @UseGuards(JwtAuthGuard)
-  getProfile(@Request() req: RequestWithUser) {
-    return this.usersService.findOneById(req.user.id)
+  async getCurrentUser(@Request() req: RequestWithUser) {
+    const user = await this.usersService.findOneById(req.user.id)
+
+    if (!user) {
+      throw new UnauthorizedException('Пользователь не найден')
+    }
+
+    return user
   }
 
   @Roles(UserRole.ADMIN)
