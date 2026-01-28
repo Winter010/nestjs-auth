@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common'
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 
 import { CreateUserDto } from './dto/create-user.dto'
 import { UserRole } from './users.entity'
