@@ -4,16 +4,16 @@ import type { MutationSettings } from '@/api/types'
 
 import * as requests from '../requests'
 
-export const usePostRegistrationMutation = (
+export const usePostLoginMutation = (
   settings?: MutationSettings<
-    requests.PostRegistrationRequestConfig,
-    typeof requests.postRegistration
+    requests.PostLoginRequestConfig,
+    typeof requests.postLogin
   >,
 ) => {
   return useMutation({
-    mutationKey: ['postRegistration'],
+    mutationKey: ['postLogin'],
     mutationFn: ({ params, config }) =>
-      requests.postRegistration({
+      requests.postLogin({
         params,
         config: { ...settings?.config, ...config },
       }),
