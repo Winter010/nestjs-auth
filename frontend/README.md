@@ -13,5 +13,3 @@ npm run dev
 ```
 
 - **Frontend:** http://localhost:3000
-
----
