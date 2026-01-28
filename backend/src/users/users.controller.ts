@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Query,
   Request,
   UnauthorizedException,
   UseGuards,
@@ -30,10 +31,18 @@ export class UsersController {
     return user
   }
 
+  @Get('/all')
   @Roles(UserRole.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Get('/all')
-  getAll() {
-    return this.usersService.getAllUsers()
+  async getAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('search') search?: string,
+  ) {
+    return this.usersService.getAllUsers({
+      page: Number(page),
+      limit: Number(limit),
+      search,
+    })
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Like, Repository } from 'typeorm'
 
 import { CreateUserDto } from './dto/create-user.dto'
 import { User } from './users.entity'
@@ -18,10 +18,23 @@ export class UsersService {
     return await this.userRepository.save(user)
   }
 
-  async getAllUsers() {
-    const users = await this.userRepository.find()
+  async getAllUsers(options: { page: number; limit: number; search?: string }) {
+    const { page, limit, search } = options
 
-    return users
+    const [items, total] = await this.userRepository.findAndCount({
+      where: search ? { email: Like(`%${search}%`) } : {},
+      order: { createdAt: 'DESC' },
+      take: limit,
+      skip: (page - 1) * limit,
+    })
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    }
   }
 
   async getUserByEmail(email: string) {
