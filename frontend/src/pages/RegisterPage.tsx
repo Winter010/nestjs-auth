@@ -13,10 +13,18 @@ import {
   Center,
 } from '@mantine/core'
 import { Link, useNavigate } from 'react-router'
+
+import { usePostRegistrationMutation } from '@/api/hooks'
+
 import { registerSchema, type RegisterFormValues } from '@/shared/schemas'
+import { useAuth } from '@/contexts/AuthContext'
 
 export const RegisterPage = () => {
+  const { setAuth } = useAuth()
+
   const navigate = useNavigate()
+
+  const postRegistrationMutation = usePostRegistrationMutation()
 
   const {
     register,
@@ -27,8 +35,22 @@ export const RegisterPage = () => {
   })
 
   const onSubmit = async (data: RegisterFormValues) => {
+    const { email, password } = data
+
     try {
-      console.log('register:', data)
+      await postRegistrationMutation.mutateAsync(
+        { params: { email, password } },
+        {
+          onSuccess: (response) => {
+            const user = response.data.user
+            const token = response.data.token
+
+            setAuth(user, token)
+
+            navigate('/profile')
+          },
+        },
+      )
     } catch (error) {
       console.error(error)
     }

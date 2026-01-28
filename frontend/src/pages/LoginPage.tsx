@@ -14,9 +14,15 @@ import {
 } from '@mantine/core'
 import { Link, useNavigate } from 'react-router'
 import { loginSchema, type LoginFormValues } from '@/shared/schemas'
+import { usePostLoginMutation } from '@/api/hooks'
+import { useAuth } from '@/contexts/AuthContext'
 
 export const LoginPage = () => {
+  const { setAuth } = useAuth()
+
   const navigate = useNavigate()
+
+  const postLoginMutation = usePostLoginMutation()
 
   const {
     register,
@@ -28,7 +34,19 @@ export const LoginPage = () => {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      console.log('login:', data)
+      await postLoginMutation.mutateAsync(
+        { params: data },
+        {
+          onSuccess: (response) => {
+            const user = response.data.user
+            const token = response.data.token
+
+            setAuth(user, token)
+
+            navigate('/profile')
+          },
+        },
+      )
     } catch (error) {
       console.error(error)
     }
