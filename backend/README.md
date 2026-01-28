@@ -13,5 +13,3 @@ npm run start:dev
 ```
 
 - **Backend:** http://localhost:3001
-
----
