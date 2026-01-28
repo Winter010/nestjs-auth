@@ -27,7 +27,7 @@ export class SeedService implements OnApplicationBootstrap {
         role: UserRole.ADMIN,
       } as CreateUserDto)
 
-      this.logger.log('✅ Default admin created: admin@admin.com / admin123')
+      this.logger.log('✅ Default admin created: admin@email.com / admin123')
     } else {
       this.logger.log('Admin user already exists.')
     }
