@@ -3,7 +3,7 @@ import { MantineProvider } from '@mantine/core'
 import { QueryClientProvider } from '@tanstack/react-query'
 
 import { queryClient } from '@/api/queryClient'
-
+import { AuthProvider } from '@/contexts/AuthContext'
 import { AppRouter } from './AppRouter'
 
 import '@mantine/core/styles.css'
@@ -14,7 +14,9 @@ export const App = () => {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <MantineProvider>
-          <AppRouter />
+          <AuthProvider>
+            <AppRouter />
+          </AuthProvider>
         </MantineProvider>
       </QueryClientProvider>
     </BrowserRouter>

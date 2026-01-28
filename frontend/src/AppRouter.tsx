@@ -4,10 +4,13 @@ import { Loader } from '@mantine/core'
 import { AuthLayout } from './layouts/AuthLayout'
 import { PrivateLayout } from './layouts/PrivateLayout'
 
+import { AdminPage } from '@/pages/AdminPage'
 import { LoginPage } from './pages/LoginPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { RegisterPage } from './pages/RegisterPage'
+
 import { ROUTES } from '@/shared/constants'
+import { useAuth } from '@/contexts/AuthContext'
 
 const PublicRoutes = () => {
   return (
@@ -56,7 +59,8 @@ const AdminRoutes = () => {
           </PrivateLayout>
         }
       >
-        <Route path={ROUTES.admin} element={<ProfilePage />} />
+        <Route path={ROUTES.admin} element={<AdminPage />} />
+        <Route path={ROUTES.profile} element={<ProfilePage />} />
 
         <Route path="*" element={<Navigate to={ROUTES.admin} replace />} />
       </Route>
@@ -65,8 +69,7 @@ const AdminRoutes = () => {
 }
 
 export const AppRouter = () => {
-  const userRole = 'user'
-  const isLoading = false
+  const { user, isLoading } = useAuth()
 
   if (isLoading)
     return (
@@ -75,8 +78,8 @@ export const AppRouter = () => {
       </AuthLayout>
     )
 
-  if (userRole === 'user') return <UserRoutes />
-  if (userRole === 'admin') return <AdminRoutes />
+  if (user?.role === 'user') return <UserRoutes />
+  if (user?.role === 'admin') return <AdminRoutes />
 
   return <PublicRoutes />
 }
